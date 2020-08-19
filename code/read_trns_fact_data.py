@@ -1,29 +1,17 @@
 from pyspark.sql.types import StructType,StructField,StringType,LongType,TimestampType,IntegerType
+from pyspark.sql.functions import col
+from code.load_transform_FHV_taxi import process_fhv_taxi_data
+from code.load_transform_Green_taxi import process_green_taxi_data
+from code.load_transform_Yellow_taxi import process_yellow_taxi_data
 
 def read_facts_data(processed_month):
+    process_fhv_taxi_data(processed_month)
+    process_green_taxi_data(processed_month)
+    process_yellow_taxi_data(processed_month)
 
 
-    #Define schema for FHV taxi trip file
-    fhvTaxiTripSchema = StructType([
-                    
-                          StructField("Pickup_DateTime", TimestampType(), True),
-                          StructField("DropOff_datetime", TimestampType(), True),
-                          StructField("PUlocationID", IntegerType(), True),
-                          StructField("DOlocationID", IntegerType(), True),
-                          StructField("SR_Flag", IntegerType(), True),
-                          StructField("Dispatching_base_number", StringType(), True),
-                          StructField("Dispatching_base_num", StringType(), True)
-                        ]
-                    )
-    print("Defined schema for FHV Taxi data")
 
-    print("Starting to extract FHV Taxi data from multiple files")
+   
 
-# Extract data from multiple FHV files
-    df_fhvTaxiTripData = spark\
-            .option("header", "true")\
-            .schema(fhvTaxiTripSchema)\
-            .csv("/mnt/taxisource/FHVTaxiTripData_{}_*.csv".format(processed_month))
-    print("Extracted FHV Taxi data")
 
     

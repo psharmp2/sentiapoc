@@ -2,6 +2,7 @@ import sys
 from pyspark.context import SparkContext
 from code.streaming_etl import streaming_etl
 from code.sftp_etl import sftp_etl
+from code.taxisource_etl import taxisource_etl
 
 try:
     # Namespace Connection String
@@ -10,7 +11,11 @@ try:
     # Event Hub Name
     eventHubName = dbutils.widgets.get("EventHubName")
 
-    source = dbutils.widgets.get("Streaming_data")
+    dbutils.widgets.get("source_files")
+    dbutils.widgets.get("processed_month")
+
+    processed_month = getArgument("processed_month")
+    source = getArgument("source_files")
     #Authenticate
     blob_container_name = get_blob_container()
     storage_account_name = get_storage_account()
@@ -35,4 +40,8 @@ try:
         streaming_etl(namespaceConnectionString,eventHubName)
 
     if source == 'sftp':
-        sftp_etl()    
+        sftp_etl()  
+
+    if source == 'taxisource' :
+        taxisource_etl(processed_month)
+
